@@ -87,6 +87,31 @@ struct MacOSVirtualMachineConfigurationHelper {
             return VZUSBKeyboardConfiguration()
         }
     }
+
+    static func createSharedDirectoryConfiguration() -> [VZVirtioFileSystemDeviceConfiguration] {
+        /*
+         This logic is a bit flaky as it depends on positional params
+         There are currently extra "launch args" passed (hence the `>= 2`) due to this:
+         https://stackoverflow.com/questions/46103109/xcode-and-python-error-unrecognized-arguments-nsdocumentrevisionsdebugmode
+         */
+        guard CommandLine.arguments.count >= 2,
+              FileManager.default.fileExists(atPath: String(CommandLine.arguments[1])) else {
+            print("⚠️ Failed to locate shared directory at \(CommandLine.arguments[1]). Ignoring.")
+            return []
+        }
+
+        let dirURL = URL(fileURLWithPath: String(CommandLine.arguments[1]), isDirectory: true)
+        guard dirURL.isFileURL else { return [] }
+
+        let sharedDirectory = VZSharedDirectory(url: dirURL, readOnly: false)
+        let share = VZSingleDirectoryShare(directory: sharedDirectory)
+
+        let tag = VZVirtioFileSystemDeviceConfiguration.macOSGuestAutomountTag
+        let sharingDevice = VZVirtioFileSystemDeviceConfiguration(tag: tag)
+        sharingDevice.share = share
+
+        return [sharingDevice]
+    }
 }
 
 #endif

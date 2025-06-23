@@ -80,6 +80,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         virtualMachineConfiguration.pointingDevices = [MacOSVirtualMachineConfigurationHelper.createPointingDeviceConfiguration()]
         virtualMachineConfiguration.keyboards = [MacOSVirtualMachineConfigurationHelper.createKeyboardConfiguration()]
 
+        virtualMachineConfiguration.directorySharingDevices = MacOSVirtualMachineConfigurationHelper.createSharedDirectoryConfiguration()
+
         try! virtualMachineConfiguration.validate()
 
         if #available(macOS 14.0, *) {
