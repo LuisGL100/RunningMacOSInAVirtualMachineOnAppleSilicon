@@ -17,6 +17,9 @@ if CommandLine.arguments.count == 2 {
     guard ipswURL.isFileURL else {
         fatalError("The provided IPSW path is not a valid file URL.")
     }
+    guard FileManager.default.fileExists(atPath: ipswPath) else {
+        fatalError("Unable to find restore image at provided path: \(ipswPath)")
+    }
 
     installer.setUpVirtualMachineArtifacts()
     installer.installMacOS(ipswURL: ipswURL)
