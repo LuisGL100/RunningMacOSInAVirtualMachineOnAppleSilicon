@@ -81,6 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         virtualMachineConfiguration.keyboards = [MacOSVirtualMachineConfigurationHelper.createKeyboardConfiguration()]
 
         virtualMachineConfiguration.directorySharingDevices = MacOSVirtualMachineConfigurationHelper.createSharedDirectoryConfiguration()
+        virtualMachineConfiguration.consoleDevices = [MacOSVirtualMachineConfigurationHelper.createConsoleDeviceConfiguration()]
 
         try! virtualMachineConfiguration.validate()
 

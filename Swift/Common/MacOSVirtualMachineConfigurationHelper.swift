@@ -112,6 +112,22 @@ struct MacOSVirtualMachineConfigurationHelper {
 
         return [sharingDevice]
     }
+
+    // Clipboard sharing isn't working. Maybe it's only for Linux ATM?
+    // https://github.com/phatblat/RunningGUILinuxInAVirtualMachineOnAMac?tab=readme-ov-file#enable-copy-and-paste-support-between-the-host-and-the-guest
+    static func createConsoleDeviceConfiguration() -> VZVirtioConsoleDeviceConfiguration {
+        let spiceAgent = VZSpiceAgentPortAttachment()
+        spiceAgent.sharesClipboard = true
+
+        let consolePortConfig = VZVirtioConsolePortConfiguration()
+        consolePortConfig.name = VZSpiceAgentPortAttachment.spiceAgentPortName
+        consolePortConfig.attachment = spiceAgent
+
+        let consoleDevice = VZVirtioConsoleDeviceConfiguration()
+        consoleDevice.ports[0] = consolePortConfig
+
+        return consoleDevice
+    }
 }
 
 #endif
